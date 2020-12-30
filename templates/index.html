@@ -24,33 +24,89 @@
                 socket.emit('my_event', {data: $('#emit_data').val()});
                 return false;
             });
-            $('form#broadcast').submit(function(event) {
-                socket.emit('my_broadcast_event', {data: $('#broadcast_data').val()});
-                return false;
-            });
-            $('form#disconnect').submit(function(event) {
-                socket.emit('disconnect_request');
-                return false;
-            });
+        
         });
+        function vote(option) { console.log("Val: " + option) }
     </script>
+
+    <!-- some style stuff -->
+    <style>
+        .vote { 
+            padding: 30px;
+            border-radius: 5px;}
+            
+        .voters {
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+            
+        #page {
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+            justify-content: space-between;
+        }
+        #vote-area {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+    </style> 
+
 </head>
-<body style="background-color:rgb(236, 106, 106);">
+<body style="background-color:rgb(236, 106, 106); margin: 0;">
 
-    <h1 style="background-color:rgb(240, 114, 114);">Socket</h1>
-    <form id="emit" method="POST" action='#'>
-        <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-        <input type="submit" value="Send Message">
-    </form>
-    <form id="broadcast" method="POST" action='#'>
-        <input type="text" name="broadcast_data" id="broadcast_data" placeholder="Message">
-        <input type="submit" value="Send Broadcast Message">
-    </form>
+    <div id ="page">
+        <!-- use flexbox -->
+        <div id="vote-area">
+            <div id="option-0" class="option">
+                <button class="vote" onclick="vote(0)"> Fist</button>
+                <ul class="voters">
+                    <li>xxxx</li>
+                </ul>
+            </div>
+            <div id="option-1" class="option">
+                <button class="vote" onclick="vote(1)"> One</button>
+                <ul class="voters">
+                    <li>xxxx</li>
+                </ul>
+            </div>
+            <div id="option-2" class="option">
+                <button class="vote" onclick="vote(2)"> Two</button>
+                <ul class="voters">
+                    <li>xxxx</li>
+                </ul>
+            </div>
+            <div id="option-3" class="option">
+                <button class="vote" onclick="vote(3)"> Three</button>
+                <ul class="voters">
+                    <li>xxxx</li>
+                </ul>
+            </div>
+            <div id="option-4" class="option">
+                <button class="vote" onclick="vote(4)"> Four</button>
+                <ul class="voters">
+                    <li>xxxx</li>
+                </ul>
+            </div>
+            <div id="option-5" class="option">
+                <button class="vote" onclick="vote(5)"> Five</button>
+                <ul class="voters">
+                    <li>xxxx</li>
+                </ul>
+            </div>
 
-    <form id="disconnect" method="POST" action="#">
-        <input type="submit" value="Disconnect Server">
-    </form>
-    <h2 style="background-color:white;">Logs</h2>
-    <div id="log" ></div>
+        </div>
+
+        <div id="controls">
+            <button>
+                Create new
+            </button>
+        </div>
+    </div>
+
 </body>
 </html>
