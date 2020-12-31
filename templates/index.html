@@ -6,27 +6,46 @@
     <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
     <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
-
-            namespace = '/test';
-            var socket = io(namespace);
-
-            socket.on('connect', function() {
-                socket.emit('my_event', {data: 'connected to the SocketServer...'});
-            });
-
-            socket.on('my_response', function(msg, cb) {
-                $('#log').append('<br>' + $('<div/>').text('logs #' + msg.count + ': ' + msg.data).html());
-                if (cb)
-                    cb();
-            });
-            $('form#emit').submit(function(event) {
-                socket.emit('my_event', {data: $('#emit_data').val()});
-                return false;
-            });
         
+        var socket
+
+        $(document).ready(function() {
+            namespace = '/api';
+            socket = io(namespace);
+
+            //eventhandler to recieve stuff from server 
+            socket.on('vote_result', function(msg) {
+                console.log(msg)        
+                for (var i = 0; i < msg.length; i++) {
+                    var voters = msg[i].voters;
+                    //find right html list elem 
+                    var elem = document.getElementById("option-" + i).children[1];
+                    elem.innerHTML = ""
+                    for (var j = 0; j <voters.length; j++) {
+                        var voter = voters[j]
+                        //create new elem
+                        var li = document.createElement("li")
+                        li.innerText = voter;
+                        elem.appendChild(li);
+                    }
+                }    
+            });
+            //check if there's a name available in local storage
+            if (window.localStorage.getItem("name") !== null)
+                document.getElementById("name").value = window.localStorage.getItem("name")
         });
-        function vote(option) { console.log("Val: " + option) }
+        
+        function vote(option) { 
+            console.log("Val: " + option)
+            socket.emit("vote", {"name": window.localStorage.getItem("name"), "option": option}) 
+        }
+
+        function savename() {
+            //save name in local storage
+            var name = document.getElementById("name").value
+            window.localStorage.setItem("name", name);
+        }
+
     </script>
 
     <!-- some style stuff -->
@@ -34,7 +53,7 @@
         .vote { 
             padding: 30px;
             border-radius: 5px;}
-            
+
         .voters {
             border: 2px solid black;
             border-radius: 5px;
@@ -61,6 +80,8 @@
 
     <div id ="page">
         <!-- use flexbox -->
+        <input type="text" placeholder="Namn" id="name" oninput="savename()">
+
         <div id="vote-area">
             <div id="option-0" class="option">
                 <button class="vote" onclick="vote(0)"> Fist</button>
