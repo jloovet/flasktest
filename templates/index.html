@@ -15,9 +15,13 @@
 
             //eventhandler to recieve stuff from server 
             socket.on('vote_result', function(msg) {
-                console.log(msg)        
-                for (var i = 0; i < msg.length; i++) {
-                    var voters = msg[i].voters;
+                console.log(msg)    
+                
+                heading = document.getElementById("subject")
+                heading.innerText = msg.subject
+                
+                for (var i = 0; i < msg.result.length; i++) {
+                    var voters = msg.result[i].voters;
                     //find right html list elem 
                     var elem = document.getElementById("option-" + i).children[1];
                     elem.innerHTML = ""
@@ -37,13 +41,19 @@
         
         function vote(option) { 
             console.log("Val: " + option)
-            socket.emit("vote", {"name": window.localStorage.getItem("name"), "option": option}) 
+            name = document.getElementById("name").value
+            socket.emit("vote", {"name": name, "option": option}) 
         }
 
         function savename() {
             //save name in local storage
             var name = document.getElementById("name").value
             window.localStorage.setItem("name", name);
+        }
+
+        function create_new() {
+            subject = prompt("Vad röstar vi om?")
+            socket.emit("create_new", {"subject": subject})
         }
 
     </script>
@@ -68,6 +78,13 @@
             height: 100vh;
             justify-content: space-between;
         }
+
+        #top-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
         #vote-area {
             display: flex;
             flex-direction: row;
@@ -80,7 +97,11 @@
 
     <div id ="page">
         <!-- use flexbox -->
-        <input type="text" placeholder="Namn" id="name" oninput="savename()">
+
+        <div id="top-area">
+            <h1 id="subject"></h1>
+            <input type="text" placeholder="Namn" id="name" oninput="savename()">
+        </div>
 
         <div id="vote-area">
             <div id="option-0" class="option">
@@ -123,8 +144,8 @@
         </div>
 
         <div id="controls">
-            <button>
-                Create new
+            <button onclick="create_new()">
+                Create new 
             </button>
         </div>
     </div>
