@@ -55,4 +55,4 @@ def update_clients() :
     emit('vote_result', room.to_json_obj(), broadcast=True)
 
 if __name__ == '__main__':
-    socket_.run(app, debug=True)
+    socket_.run(app, debug=True, host="0.0.0.0")
