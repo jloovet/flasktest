@@ -23,7 +23,7 @@ class VoteRoom :
 async_mode = None
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mySecret0601'
-socket_ = SocketIO(app, async_mode=async_mode)
+socket_ = SocketIO(app, async_mode='eventlet')
 thread = None
 thread_lock = Lock()
 
